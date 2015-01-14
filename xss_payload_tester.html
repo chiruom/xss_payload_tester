@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>XSS Payload 测试机</title>
+<!-- Bootstrap -->
+<link href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9] 
+<script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<style type="text/css">
+  body {
+  font-family: "Microsoft YaHei" ! important;
+  font-size: 14px;
+  line-height: 100%;
+  color: #222;
+  background-color: #FFFFFF;
+	}
+  span {
+ display: inline-block;
+	}
+ p{ word-wrap:break-word; word-break:normal; }
+</style>
+</head>
+<body>
+<div class="container-fluid">
+<!--	标题-->
+<div class="row">
+	<div class="col-xs-12" style="color:#FFFFFF;background:#34495E";>
+		<h6><br></h6>
+		<h6><br></h6>
+		<h1>&nbsp;&nbsp;<big>XSS Payload 测试机</big></h1>
+		<h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;技术宅拯救世界！</h5>
+		<h6><br></h6>
+		<h6><br></h6>
+	</div>
+</div>
+	
+<!--  导航条部分   -->
+<div class="row"  >
+	<nav class="navbar navbar-inverse navbar-static-top" role="navigation"  >
+		<div class="container-fluid" >
+			<div class="navbar-header">
+			  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			  </button>
+			  <a class="navbar-brand" href="http://www.liyawei.cn">主页</a>
+			</div>
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			  <ul class="nav navbar-nav">
+				<li><a target="_blank" href="https://github.com/chiruom/">Github</a></li>
+
+			  </ul>
+
+				<ul class="nav navbar-nav navbar-right">
+					
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">联系我 <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a target="_blank" href="http://weibo.com/u/3911382082/">微博</a></li>
+							<li><a target="_blank" href="http://www.wooyun.org/whitehats/秋风落木">乌云</a></li>
+							<li class="divider"></li>
+							<li><a target="_blank" href="http://space.bilibili.com/5591810">BiliBili</a></li>
+							<li class="divider"></li>
+							<li><a target="_blank" href="Mailto:root@liyawei.cn">给我发邮件</a></li>
+						</ul>
+					</li>
+					<ul class="nav navbar-nav">
+						<li><a data-toggle="modal" data-target=".bs-example-modal-lg">帮助</a></li>
+					</ul>
+				</ul>
+			</div>
+		 </div>
+	</nav>
+</div>
+
+
+<div class="row" >
+<div class="col-lg-6">	
+	<h4><p class="text-danger" > 测试</p></h4>	
+<div class="row" >
+	<!--	测试1  输出点在标签之间-->
+
+	<div class="panel panel-default">
+  	<div class="panel-body">
+		<h4>输入的数据被写在标签之间</h4>
+		<p class="muted" >例如以下情况：</p>
+		<p class="text-danger" >&lt;div&gt;【数据的输出点】&lt;/div&gt;</p>
+		<p class="muted" >例如当数据为 &lt;script&gt;alert(0)&lt;/script&gt; 时发生XSS </p>
+		<div class="input-group">
+		  <input id="text1" type="text" class="form-control">
+		  <span class="input-group-btn">
+			<button class="btn btn-danger" type="button" onclick=go1()>Go!</button>
+		  </span>
+		</div><!-- /input-group -->
+		
+	
+		<script>
+			function go1(){
+//				alert("go1");
+			var text1t=$("#text1").val();
+//				alert (text1)
+				//document.write(text1);
+			$("#1").append(text1t); 
+			}
+		</script>
+		<div id="1"></div>
+	</div>
+	</div>
+	
+</div><!-- /.row -->
+<!--	测试2  输出点在title标签内-->	
+<div class="row" >
+	
+	<div class="panel panel-default">
+  	<div class="panel-body">
+		<h4>输入端数据被写在title标签内</h4>
+		<h4>输入的数据被写在标签之间</h4>
+		<p class="muted" >例如以下情况：</p>
+		<p class="text-danger" >&lt;title&gt;XXX 【数据的输出点】&lt;/title&gt;</p>
+		<p class="muted" >例如当数据为 &lt;/title&gt;&lt;script&gt;alert(0)&lt;/script&gt; 时发生XSS 。<br>
+			另外,&lt;textarea&gt;&lt;xmp&gt;&lt;noframe&gt;&lt;noscript&gt;&lt;plaintext&gt;这些标签具有同样属性，需要先闭合标签 </p>
+		<div class="input-group">
+		  <input id="text2" type="text" class="form-control">
+		  <span class="input-group-btn">
+			<button class=" btn btn-danger" type="button" onclick=go2()>Go!</button>
+		  </span>
+		</div><!-- /input-group -->
+	
+		<script>
+			function go2(){
+//				alert("go1");
+			var text2t=$("#text2").val();
+//				alert (text2)
+				//document.write(text1);
+			$("title").append(text2t); 
+			}
+		</script>
+		<div id="2"></div>
+	</div>
+	</div>
+
+</div><!-- /.row -->
+	
+<!--	测试3 >输出点在J内联事件内-->	
+<div class="row" >
+
+	<div class="panel panel-default" style=" width=100%">
+  	<div class="panel-body" style=" width=100%">
+		<h4>输入的数据在内联事件内</h4>
+		<p class="muted" >例如以下情况：</p>
+		<p class="text-danger" >&lt;button onclick=&quot;...【数据的输出点】...&quot;&gt;B&lt;/button&gt;</p>
+		<div class="input-group">
+		  <input id="text3" type="text" class="form-control">
+		  <span class="input-group-btn">
+			<button class=" btn btn-danger" type="button" id="c3b" onclick=go3()>点我注入</button>
+			<button type="button" class="btn btn-warning" id="3b" >点我测试</button>
+		  </span>
+		</div><!-- /input-group -->
+		<div id="3">
+			
+		</div>
+		<script>
+			function go3(){
+			var text3t=$("#text3").val();
+				$("#3b").attr("onclick",text3t); 
+			}
+		</script>
+	</div>
+	</div>
+
+</div><!-- /.row -->
+
+<!--	测试4  输出点在herf属性中-->	
+<div class="row" >
+	
+	<div class="panel panel-default" style=" width=100%">
+  	<div class="panel-body" style=" width=100%">
+		<h4>输入的数据被写在在herf属性中</h4>
+		<p class="muted" >例如以下情况：</p>
+		<p class="text-danger" >&lt;a href=&quot;【数据的输出点】&quot;&gt;AAA&lt;/a&gt;</p>
+		<p class="muted" >当数据为 alert()时发生XSS </p>
+		<div class="input-group">
+		  <input id="text4" type="text" class="form-control">
+		  <span class="input-group-btn">
+			<button class=" btn btn-danger" type="button" id="c4b" onclick=go4()>点我注入</button>
+			<a target="_blank" class="btn btn-warning" id="4b" >点我测试</a>
+		  </span>
+		</div><!-- /input-group -->
+		<div id="4">
+			
+		</div>
+		<script>
+			function go4(){
+			var text4t=$("#text4").val();
+				$("#4b").attr("href",text4t); 
+			}
+		</script>
+	</div>
+	</div>
+	
+</div><!-- /.row -->
+
+<!--测试5 输入的数据被内联事件写在网页上-->
+<div class="row" >
+	
+	<div class="panel panel-default" style=" width=100%">
+  	<div class="panel-body" style=" width=100%">
+		<h4>输入的数据被内联事件写在网页上</h4>
+		<p class="muted" >例如以下情况：</p>
+		<p class="text-danger" >...onclick="document.write("...【数据的输出点】...")..."</p>
+
+
+		<div class="input-group">
+		  <input id="text5" type="text" class="form-control">
+		  <span class="input-group-btn">
+			<button class=" btn btn-danger" type="button" id="c5b" onclick=go5()>点我注入</button>
+			<a target="_blank" class="btn btn-warning" id="5b" >点我测试</a>
+		  </span>
+		</div><!-- /input-group -->
+		<p class="text-warning">测试效果:↓</p>
+		<div id="5">
+			
+		</div>
+		<script>
+			function go5(){
+			var text5t=$("#text5").val();
+				$("#5b").attr("onclick","$(\"#5\").append(\""+text5t+"\")" ); 
+			}
+		</script>
+
+	</div>
+	</div>
+
+</div><!-- /.row -->
+	
+<!--测试6 输入的数据被写在script标签内-->	
+<div class="row" >
+
+	<div class="panel panel-default" style=" width=100%">
+  	<div class="panel-body" style=" width=100%">
+		<h4> 输入的数据被写在script标签内</h4>
+		<p class="muted" >例如以下情况：</p>
+		<p class="text-danger" >&lt;script&gt;<br>...<br>var a =【数据的输出点】;<br>...<br>&lt;/script&gt;</p>
+
+		<div class="input-group">
+		  <input id="text6" type="text" class="form-control">
+		  <span class="input-group-btn">
+			<button class=" btn btn-danger" type="button" id="c6b" onclick=go6()> 点我注入</button>
+			<a target="_blank" class="btn btn-warning" id="6b" onclick=text6() >点击我执行被注入的js脚本</a>
+		  </span>
+		</div><!-- /input-group -->
+
+		<div id="6">
+			
+		</div>
+		 <div id="s6"></div>
+		<script>
+			function go6(){
+			var text6t=$("#text6").val();
+				$("#s6").append('<script>function text6(){var a = ' +text6t+';}<\/script>');
+//				$("#6").append(a);
+			}
+		</script>
+
+	</div>
+	</div>
+	
+</div><!--  -->
+	
+<!--测试7 输入的数据被写在CSS内-->	
+<div class="row" >
+	
+	<div class="panel panel-default" style=" width=100%">
+  	<div class="panel-body" style=" width=100%">
+		<h4> 输入的数据被写在CSS内</h4>
+		<p class="muted" >例如以下情况：</p>
+		<p class="text-danger" >&lt;div style=&quot;...【数据的输出点】...&quot;&gt;</p>
+
+		<div class="input-group">
+		  <input id="text7" type="text" class="form-control">
+		  <span class="input-group-btn">
+			<button class=" btn btn-danger" type="button" id="c7b" onclick=go7()> Go!</button>
+			
+		  </span>
+		</div><!-- /input-group -->
+		<p class="text-warning">测试效果:↓</p>
+		<div id="7" style="color:#C0392B;font-size:20px;">
+			<p>被应用了CSS的文本</p>
+		</div>
+		
+		<script>
+			function go7(){
+			var text7t=$("#text7").val();
+			var css=$("#7").attr("style");
+			css=css+text7t;
+			$("#7").attr("style",css);
+			}
+		</script>
+
+	</div>
+	</div>
+	
+</div><!--  -->
+
+</div>  <!-- 富框架col -->
+	
+<div class="col-lg-6">	
+<h4><p class="text-success"> 转码</p></h4>
+<div class="panel panel-default" style=" width=100%">
+<div class="panel-body" style=" width=100%">
+	<h4><p class="text-info"> 这里提供了XSS中经常用到的转码</p></h4>
+	<div class="input-group">
+		  <input id="textzm" type="text" class="form-control">
+		  <span class="input-group-btn">
+			<button class=" btn btn-success" type="button" id="zmb" onclick=zmf()> 转码</button>	
+		  </span>
+		</div><!-- /input-group -->
+		<div id="zm">
+			<br><br>
+			<p>Html编码:↓</p>
+			<p class="text-primary" id="h1"><br></p>
+			<p>十进制Html编码:↓</p>
+			<p class="text-warning" id="h2"><br></p>
+			<p>十六进制Html编码:↓</p>
+			<p class="text-info" id="h3"><br></p>
+			<p>javascript编码:↓</p>
+			<p class="text-success" id="j3"><br></p>
+			<p>十六进制javascript编码:↓</p>
+			<p class="text-danger" id="j1"><br></p>
+			<p>Unicode形式的javascript编码:↓</p>
+			<p class="text-info" id="j2"><br></p>
+		</div>
+		
+		
+	<script>
+				/*
+		*js HTML Encode
+		*/ 
+		function  htmlEncode(str) {//HTML des encode.
+			var res=[];
+			for(var i=0;i < str.length;i++)
+				res[i]=str.charCodeAt(i);
+			return "&#"+res.join(";&#")+";";
+		}
+		 function htmlEncode2(str) {
+           var s = "";
+           if (str.length == 0)
+               return "";
+           s = str.replace(/&/g, "&gt;");
+           s = s.replace(/</g, "&lt;");
+           s = s.replace(/>/g, "&gt;");
+           s = s.replace(/\"/g, "&quot;");
+           s = s.replace(/\n/g, "<br>");
+           return s;
+       }
+
+		//s.replace(/([/u4e00-/u9fa5]+)/g,function($,$1) {
+		//    return htmlEncode($1);
+		//})
+		function htmlHexEncode(str) {//HTML hex encode.
+			var res=[];
+			for(var i=0;i < str.length;i++)
+				res[i]=str.charCodeAt(i).toString(16);
+			return "&#"+String.fromCharCode(0x78)+res.join(";&#"+String.fromCharCode(0x78))+";";//x ，防止ff下&#x 转义
+		}
+		
+		function jsHexEncode(str) {//HTML hex encode.
+			var res=[];
+			for(var i=0;i < str.length;i++)
+				res[i]=str.charCodeAt(i).toString(16);
+			return "\\"+String.fromCharCode(0x78)+res.join("\\"+String.fromCharCode(0x78));//x ，防止ff下&#x 转义
+		}
+		
+		function jsUnicodeEncode(str) {//HTML hex encode.
+			var res=[];
+			for(var i=0;i < str.length;i++)
+				res[i]=str.charCodeAt(i).toString(16);
+			return "\\u00"+res.join("\\u00");//x ，防止ff下&#x 转义
+		}
+		
+		function jsEncode(str) {//HTML hex encode.
+			var s = "";
+           if (str.length == 0)
+               return "";
+           s = str.replace(/'/g, "\\\'");
+           s = s.replace(/"/g, "\\\"");
+           s = s.replace(/</g, "\\\<");
+           s = s.replace(/>/g, "\\\>");
+           s = s.replace(/\(/g, "\\(");
+           s = s.replace(/\)/g, "\\\)");
+           return s;
+		}
+		
+		function zmf(){
+			var text_zm2=$("#textzm").val();
+			var html_e1=htmlEncode(text_zm2);
+			var html_e2=htmlEncode2(text_zm2);
+			var html_e3=htmlHexEncode(text_zm2);
+			var js_e1=jsHexEncode(text_zm2);
+			var js_e2=jsUnicodeEncode(text_zm2);
+			var js_e3=jsEncode(text_zm2);
+			$("#h2").text(html_e1);
+			$("#h1").text(html_e2);
+			$("#h3").text(html_e3);
+			$("#j1").text(js_e1);
+			$("#j2").text(js_e2);
+			$("#j3").text(js_e3);
+			
+		}
+	</script>
+	
+</div>
+</div>
+</div><!-- 富框架col -->
+	
+</div>  <!-- 富框架rom -->
+	
+<!--版权信息	-->
+<div class="row" >
+	<div class="col-xs-12"  style="color:#FFFFFF;background:#222222;text-align:center">
+
+		<h6>©AcGit.cc 2015<h6>
+	</div>
+	<div class="col-xs-12"  style="color:#FFFFFF;background:#34495E;text-align:center">
+		<h6>    <h6>
+	</div>
+</div>
+	
+</div>
+
+			
+<!--关于模态框-->
+<div class="modal fade bs-example-modal-lg" id="help" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h3 class="text-center" >XSS Payload 测试机</h3>
+      </div>
+      <div class="modal-body">
+		  <h4><p class="text-danger" >1.左边的"测试"根据数据输出点的位置分成若干种情况，只需把需要测试的XSS Payload 写入相应的文本框，点击文本框右边的按钮既可测试该Payload在此输出点的位置下是否有效。</p><p class="text-success" >2.右边的"转码"提供了XSS中经常用到的转码。</p><p class="text-info" >3.如在使用中需要帮助，请点击导航条右侧的"帮助"。</p></h4>
+      </div>
+		<div class="modal-footer">
+			<h3 class="text-center" >AcGit.cc</h3>
+				<h6 class="text-center" >技术宅改变世界</h6>
+		</div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" >
+	$('#help').modal('show');
+</script>
+
+</body>
